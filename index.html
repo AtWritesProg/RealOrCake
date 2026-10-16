@@ -9,7 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3c3 4 4 6 0 10-4-4-3-6 0-10z' fill='%23FFC46B'/%3E%3Crect x='12' y='14' width='8' height='16' rx='3' fill='%23FB7185'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@400;500;600&family=Pacifico&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@400;500;600&family=Pacifico&family=Pixelify+Sans:wght@500;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
 <style>
   :root {
     --bg-0: #120910;
@@ -392,43 +392,152 @@
   .modal__actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
   @keyframes polaroidIn { from { opacity: 0; transform: translateY(40px) rotate(6deg) scale(.9); } }
 
-  /* ---------- intro ---------- */
+  /* ---------- intro: pixel-art game menu ---------- */
   .intro {
+    --px: 4;
+    --ink-dark: #2a1838;
     position: fixed; inset: 0; z-index: 30;
-    display: grid; place-items: center;
-    padding: 24px 16px;
-    overflow-y: auto;
-    background: radial-gradient(circle at 50% 40%, rgba(58, 22, 38, .35), rgba(18, 9, 16, .82));
-    transition: opacity .8s var(--ease-out), visibility 0s .8s;
+    overflow: hidden;
+    font-family: "Pixelify Sans", var(--font-ui);
+    background: linear-gradient(180deg, #24163a 0%, #3b2150 30%, #63305f 52%, #9a4a6e 65.6%, #2a1238 65.8%, #170a22 100%);
+    transition: opacity .7s steps(6), visibility 0s .7s;
   }
   .intro.out { opacity: 0; visibility: hidden; }
-  .intro__card {
-    width: min(440px, 100%);
-    text-align: center;
-    padding: 30px 28px 24px;
-    border-radius: 32px;
-    animation: cardIn .9s var(--ease-out) both;
+  .spr { display: block; line-height: 0; }
+  .spr canvas {
+    display: block;
+    width: calc(var(--w) * var(--px) * var(--k, 1) * 1px);
+    height: calc(var(--h) * var(--px) * var(--k, 1) * 1px);
+    image-rendering: pixelated;
   }
-  @keyframes cardIn { from { opacity: 0; transform: translateY(24px) scale(.97); } }
-  .intro__candle { display: block; margin: 0 auto 6px; width: 58px; height: 108px; overflow: visible; }
-  .intro__candle .flame { transform-origin: 32px 42px; animation: flicker 1.6s ease-in-out infinite; }
-  .intro__candle .halo { transform-origin: 32px 28px; animation: halo 2.2s ease-in-out infinite; }
-  @keyframes flicker {
-    0%, 100% { transform: scale(1, 1) skewX(0deg); }
-    20% { transform: scale(.94, 1.06) skewX(2deg); }
-    45% { transform: scale(1.04, .95) skewX(-2deg); }
-    70% { transform: scale(.97, 1.04) skewX(1deg); }
+  .px-abs { position: absolute; }
+
+  /* sky */
+  .px-star { position: absolute; animation: twinkle-px 2.4s steps(3) infinite; }
+  @keyframes twinkle-px { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+  .px-moon { top: 4%; left: 27%; filter: drop-shadow(0 0 18px rgba(255, 212, 71, .45)); }
+  .px-cloud { animation: cloud-drift 9s steps(9) infinite alternate; }
+  @keyframes cloud-drift { to { translate: 36px 0; } }
+  .px-c1 { top: 7%; left: 2.5%; }
+  .px-c2 { top: 4%; left: 46%; animation-duration: 12s; }
+  .px-c3 { top: 27%; right: 2%; animation-duration: 10s; animation-direction: alternate-reverse; }
+  .px-catcloud { top: 4%; right: 21%; display: flex; flex-direction: column; align-items: center; }
+  .px-catcloud .px-sleepy { margin-bottom: calc(var(--px) * -3px); position: relative; z-index: 1; animation: breathe 2.6s steps(2) infinite; transform-origin: bottom; }
+  @keyframes breathe { 50% { transform: scaleY(1.06); } }
+  .px-z {
+    position: absolute; left: 6%; top: -6px;
+    font: 400 calc(var(--px) * 3px)/1 "Press Start 2P", monospace;
+    color: #f4e6ff; opacity: 0;
+    animation: zzz 3s steps(6) infinite;
   }
-  @keyframes halo { 50% { transform: scale(1.12); opacity: .8; } }
-  .intro__name {
-    margin: 0 0 .08em;
-    font: 700 clamp(88px, 22vw, 124px)/.85 var(--font-hand);
-    filter: drop-shadow(0 4px 24px rgba(244, 63, 94, .45));
+  .px-z:nth-child(2) { animation-delay: 1.5s; }
+  @keyframes zzz { 0% { opacity: 0; transform: translate(0, 0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-14px, -26px); } }
+  .px-balloons { top: 28%; left: 2.5%; animation: bob 3s steps(4) infinite alternate; }
+  .px-sword { top: 33%; right: 3%; animation: bob 2.4s steps(3) infinite alternate; }
+  @keyframes bob { to { translate: 0 calc(var(--px) * -2px); } }
+
+  /* synthwave floor */
+  .px-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 34.2%; perspective: 240px; perspective-origin: 50% 0; overflow: hidden; }
+  .px-floor::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: #ff9cd0; box-shadow: 0 0 26px 8px rgba(255, 120, 200, .45); z-index: 1; }
+  .px-grid {
+    position: absolute; left: -60%; right: -60%; top: 0; height: 320%;
+    transform-origin: 50% 0;
+    transform: rotateX(64deg);
+    background-image:
+      linear-gradient(90deg, rgba(255, 110, 196, .6) 2px, transparent 2px),
+      linear-gradient(0deg, rgba(255, 110, 196, .6) 2px, transparent 2px);
+    background-size: 64px 64px;
+    animation: grid-run 2.4s linear infinite;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 18%);
   }
-  .intro__text { margin: 0 auto 24px; max-width: 32ch; color: var(--ink-2); font-size: 17px; line-height: 1.5; }
-  .intro__actions { display: flex; flex-direction: column; gap: 4px; }
-  .intro__note { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 14px 0 0; font-size: 13px; color: var(--ink-3); }
-  .intro__note .i { width: 15px; height: 15px; }
+  @keyframes grid-run { to { background-position: 0 64px; } }
+
+  /* frame + menu */
+  .px-frame {
+    position: absolute; left: max(16px, 8%); right: max(16px, 8%); top: 13%; bottom: 18%;
+    display: grid; place-items: center;
+    border: 3px solid #f4e6ff;
+    border-radius: 26px;
+    box-shadow: 0 0 0 3px rgba(42, 24, 56, .4), 0 0 34px rgba(255, 170, 230, .2), inset 0 0 44px rgba(255, 180, 230, .12);
+  }
+  .px-ice { position: absolute; top: -3px; }
+  .px-ice--l1 { left: 9%; } .px-ice--l2 { left: calc(9% + var(--px) * 13px); }
+  .px-ice--r1 { right: 9%; } .px-ice--r2 { right: calc(9% + var(--px) * 13px); }
+  .px-content { display: flex; flex-direction: column; align-items: center; gap: clamp(14px, 2.6vh, 28px); padding: 24px 12px 64px; text-align: center; }
+  .px-label {
+    display: flex; align-items: center; gap: 12px; margin: 0;
+    font: 400 clamp(10px, 1.05vw, 14px)/1.4 "Press Start 2P", monospace;
+    color: #ffe9c7; letter-spacing: .04em;
+  }
+  .px-dot { flex: none; width: 20px; height: 11px; border-radius: 6px; background: #ffd447; box-shadow: inset 0 -3px 0 #e3a227; }
+  .px-title {
+    display: flex; align-items: center; justify-content: center; gap: .2em; margin: 0;
+    font: 700 clamp(40px, 10.5vw, 136px)/1 "Pixelify Sans", monospace;
+    letter-spacing: .03em;
+    color: #f8ecda;
+    text-shadow: .04em .04em 0 #3a1f4a, .08em .08em 0 rgba(20, 8, 30, .4);
+  }
+  .px-title .spr canvas { width: auto; height: .82em; filter: drop-shadow(.04em .04em 0 #3a1f4a); }
+  .px-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(12px, 3.4vw, 52px); margin-top: 4px; }
+  .px-btn {
+    appearance: none; border: 0; cursor: pointer;
+    min-height: 50px; padding: 0 clamp(18px, 2.2vw, 30px);
+    border-radius: 999px;
+    font: 400 clamp(11px, 1.05vw, 14px)/1 "Press Start 2P", monospace;
+    color: #3a2140;
+    background: #ffd447;
+    --edge: #e3a227;
+    box-shadow: inset 0 -5px 0 var(--edge), inset 0 3px 0 rgba(255, 255, 255, .45), 0 5px 0 var(--ink-dark);
+    transition: transform .12s steps(2), box-shadow .12s steps(2);
+  }
+  .px-btn:hover { transform: translateY(-2px); box-shadow: inset 0 -5px 0 var(--edge), inset 0 3px 0 rgba(255, 255, 255, .45), 0 7px 0 var(--ink-dark); }
+  .px-btn:active { transform: translateY(4px); box-shadow: inset 0 -3px 0 var(--edge), 0 1px 0 var(--ink-dark); }
+  .px-btn:focus-visible { outline: 3px dashed #fff8ef; outline-offset: 5px; }
+  .px-btn:disabled { cursor: progress; filter: saturate(.6) brightness(.9); }
+  .px-btn--blue { background: #86a9ff; --edge: #5a7fe0; animation: start-bob 1.2s steps(2) infinite; }
+  @keyframes start-bob { 50% { translate: 0 -3px; } }
+  .px-note { margin: 0; font: 500 15px/1.4 "Pixelify Sans", var(--font-ui); color: rgba(255, 233, 199, .78); }
+  .px-how__title { margin: 0; font: 400 clamp(14px, 1.6vw, 20px)/1.3 "Press Start 2P", monospace; color: #ffd447; }
+  .px-how ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; text-align: left; font: 500 clamp(17px, 1.6vw, 21px)/1.35 "Pixelify Sans", var(--font-ui); color: #f8ecda; }
+  .px-how li { display: flex; align-items: center; gap: 14px; }
+  .px-how li span { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: #ffd447; color: #3a2140; font: 400 12px/1 "Press Start 2P", monospace; box-shadow: inset 0 -3px 0 #e3a227; }
+  .px-hearts { position: absolute; bottom: 14px; display: flex; gap: calc(var(--px) * 1px); }
+  .px-hearts--l { left: 5%; } .px-hearts--r { right: 5%; }
+  .px-hearts .spr { animation: heart-beat 1.6s steps(2) infinite; }
+  .px-hearts .spr:nth-child(2n) { animation-delay: .4s; }
+  @keyframes heart-beat { 50% { translate: 0 -2px; } }
+
+  /* ground */
+  .px-grass { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--px) * 8px); background-repeat: repeat-x; background-size: calc(var(--px) * 16px) 100%; image-rendering: pixelated; z-index: 2; }
+  .px-tree { left: -6px; bottom: calc(var(--px) * 4px); z-index: 1; }
+  .px-tower { right: 1.5%; bottom: calc(var(--px) * 4px); z-index: 1; }
+  .px-ground {
+    --k: 1.5;
+    position: absolute; left: 0; right: 0; bottom: calc(var(--px) * 5px); z-index: 3;
+    display: flex; align-items: flex-end; justify-content: space-evenly;
+    padding: 0 calc(var(--px) * 22px) 0 calc(var(--px) * 26px);
+    pointer-events: none;
+  }
+  .px-ground .spr { flex: none; }
+  .px-idle { animation: bob 1.4s steps(2) infinite alternate; }
+  .px-idle--slow { animation-duration: 2.2s; }
+  .px-walker { --k: 1.5; position: absolute; left: 0; bottom: calc(var(--px) * 3px); z-index: 4; animation: walk 24s linear infinite; }
+  @keyframes walk { from { transform: translateX(-120px); } to { transform: translateX(calc(100vw + 40px)); } }
+
+  @media (max-width: 640px) {
+    .px-frame { top: 15%; bottom: 25%; }
+    .px-balloons, .px-sword, .px-c3, .px-hide-sm { display: none; }
+    .px-moon { left: 8%; top: 4.5%; }
+    .px-c1 { top: 10%; left: auto; right: 4%; }
+    .px-c2 { left: 32%; top: 2%; }
+    .px-catcloud { right: 4%; top: 3%; }
+    .px-tree, .px-tower { --k: .67; }
+    .px-ground, .px-walker { --k: 1; }
+    .px-ground { padding: 0 calc(var(--px) * 13px) 0 calc(var(--px) * 16px); }
+    .px-ice--l2, .px-ice--r2 { display: none; }
+    .px-hearts .spr:nth-child(n+4) { display: none; }
+  }
 
   .flash { position: fixed; inset: 0; z-index: 40; background: #fff; opacity: 0; pointer-events: none; }
   .flash.go { animation: flash .6s ease-out; }
@@ -444,7 +553,7 @@
     .pill__body { width: 180px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .bokeh span, .intro__candle .flame, .intro__candle .halo { animation: none; }
+    .bokeh span, .intro *, .intro *::before { animation: none !important; }
     .love.show .weirdo { animation: pop .01s 1s both; }
     .love.show .love__heart { animation: heartIn .01s 1.2s both; }
     .love.show .spark { animation: none; }
@@ -541,37 +650,334 @@
   </div>
 
   <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
-    <div class="intro__card glass">
-      <svg class="intro__candle" viewBox="0 0 64 120" aria-hidden="true">
-        <defs>
-          <radialGradient id="introHalo"><stop offset="0" stop-color="#FFC46B" stop-opacity=".6"/><stop offset="1" stop-color="#FFC46B" stop-opacity="0"/></radialGradient>
-          <linearGradient id="introFlame" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF7A1A"/><stop offset=".55" stop-color="#FFC64A"/><stop offset="1" stop-color="#FFF4D6"/></linearGradient>
-          <clipPath id="introBody"><rect x="23" y="48" width="18" height="68" rx="5"/></clipPath>
-        </defs>
-        <circle class="halo" cx="32" cy="28" r="28" fill="url(#introHalo)"/>
-        <path class="flame" d="M32 8 C 39 20, 43 29, 32 42 C 21 29, 25 20, 32 8 Z" fill="url(#introFlame)"/>
-        <rect x="31" y="40" width="2" height="9" rx="1" fill="#3a2a20"/>
-        <rect x="23" y="48" width="18" height="68" rx="5" fill="#FFF6EC"/>
-        <g clip-path="url(#introBody)" fill="#FB7185">
-          <path d="M10 70 L41 52 L41 60 L10 78 Z"/><path d="M10 90 L41 72 L41 80 L10 98 Z"/><path d="M10 110 L41 92 L41 100 L10 118 Z"/>
-        </g>
-      </svg>
-      <p class="eyebrow">a tiny surprise for</p>
-      <h1 class="intro__name grad-text" id="introTitle">Poopu</h1>
-      <p class="intro__text">Turn on your camera and mic, make a wish, then blow the candles out. For real.</p>
-      <div class="intro__actions">
-        <button class="btn btn--primary" id="startBtn" type="button">
-          <svg class="i" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
-          Light the candles
-        </button>
-        <button class="btn btn--ghost" id="startNoCamBtn" type="button">Start without the camera</button>
+    <div aria-hidden="true">
+      <div id="pxStars"></div>
+      <span class="spr px-abs px-moon" data-sprite="moon" data-k="1.4"></span>
+      <span class="spr px-abs px-cloud px-c1" data-sprite="cloud"></span>
+      <span class="spr px-abs px-cloud px-c2" data-sprite="cloud" data-k=".7"></span>
+      <span class="spr px-abs px-cloud px-c3" data-sprite="cloud" data-k=".85"></span>
+      <span class="px-abs px-catcloud">
+        <span class="px-z">z</span><span class="px-z">z</span>
+        <span class="spr px-sleepy" data-sprite="sleepyCat"></span>
+        <span class="spr" data-sprite="cloud"></span>
+      </span>
+      <span class="spr px-abs px-balloons" data-sprite="balloons"></span>
+      <span class="spr px-abs px-sword" data-sprite="sword"></span>
+      <div class="px-floor"><div class="px-grid"></div></div>
+    </div>
+
+    <div class="px-frame">
+      <span class="spr px-ice px-ice--l1" data-sprite="icicles" aria-hidden="true"></span>
+      <span class="spr px-ice px-ice--l2" data-sprite="icicles" data-k=".7" aria-hidden="true"></span>
+      <span class="spr px-ice px-ice--r1" data-sprite="icicles" aria-hidden="true"></span>
+      <span class="spr px-ice px-ice--r2" data-sprite="icicles" data-k=".7" aria-hidden="true"></span>
+
+      <div class="px-content" id="pxMain">
+        <p class="px-label"><span class="px-dot" aria-hidden="true"></span>POOPU'S PARTY HOUSE<span class="px-dot" aria-hidden="true"></span></p>
+        <h1 class="px-title" id="introTitle"><span class="spr" data-sprite="cakeIcon" aria-hidden="true"></span>WELCOME</h1>
+        <div class="px-buttons">
+          <button class="px-btn" id="howBtn" type="button" aria-label="How to play">HOW TO</button>
+          <button class="px-btn px-btn--blue" id="startBtn" type="button" aria-label="Start with camera and mic">START</button>
+          <button class="px-btn" id="startNoCamBtn" type="button" aria-label="Start without the camera">NO CAM</button>
+        </div>
+        <p class="px-note">Camera + mic on. Nothing is recorded.</p>
       </div>
-      <p class="intro__note">
-        <svg class="i" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Nothing is recorded or uploaded.
-      </p>
+
+      <div class="px-content px-how" id="pxHow" hidden>
+        <h2 class="px-how__title">HOW TO PLAY</h2>
+        <ol>
+          <li><span>1</span>Press START, allow camera + mic</li>
+          <li><span>2</span>Close your eyes and make a wish</li>
+          <li><span>3</span>Blow the candles out. For real!</li>
+        </ol>
+        <p class="px-note">No mic? Tap the flames instead.</p>
+        <button class="px-btn px-btn--blue" id="howBack" type="button">BACK</button>
+      </div>
+
+      <div class="px-hearts px-hearts--l" aria-hidden="true">
+        <span class="spr" data-sprite="heart" data-swap="h:#f39237"></span><span class="spr" data-sprite="heart" data-swap="h:#f39237"></span><span class="spr" data-sprite="heart" data-swap="h:#f39237"></span><span class="spr" data-sprite="heart" data-swap="h:#f39237"></span><span class="spr" data-sprite="heart" data-swap="h:#f39237"></span>
+      </div>
+      <div class="px-hearts px-hearts--r" aria-hidden="true">
+        <span class="spr" data-sprite="heart" data-swap="h:#ff9cbc"></span><span class="spr" data-sprite="heart" data-swap="h:#ff9cbc"></span><span class="spr" data-sprite="heart" data-swap="h:#ff9cbc"></span><span class="spr" data-sprite="heart" data-swap="h:#ff9cbc"></span><span class="spr" data-sprite="heart" data-swap="h:#ff9cbc"></span>
+      </div>
+    </div>
+
+    <div aria-hidden="true">
+      <span class="spr px-abs px-tree" data-sprite="tree"></span>
+      <span class="spr px-abs px-tower" data-sprite="tower" data-rate="170"></span>
+      <div class="px-ground">
+        <span class="spr px-idle px-idle--slow" data-sprite="deer"></span>
+        <span class="spr px-hide-sm" data-sprite="sunflower"></span>
+        <span class="spr" data-sprite="dog" data-rate="200"></span>
+        <span class="spr" data-sprite="seal" data-rate="380"></span>
+        <span class="spr px-hide-sm" data-sprite="sunflower"></span>
+        <span class="spr px-idle" data-sprite="otter"></span>
+        <span class="spr" data-sprite="blackCat" data-rate="280" data-swap="k:#9a82dc"></span>
+        <span class="spr px-hide-sm" data-sprite="bush"></span>
+        <span class="spr px-hide-sm" data-sprite="chest"></span>
+      </div>
+      <span class="spr px-walker" data-sprite="walkCat" data-rate="160"></span>
+      <div class="px-grass" id="pxGrass"></div>
     </div>
   </div>
+
+  <script>
+    // Pixel-art sprites for the start screen: each sprite is a list of frames, each frame a grid of palette keys.
+    (() => {
+      const intro = document.getElementById('intro');
+      const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const PAL = {
+        k: '#24142e', w: '#fff8ef', c: '#ffe9c7', g: '#a3a8bf', G: '#6a7089', l: '#d3d8e8', s: '#4f5670',
+        b: '#9a6440', B: '#5e3a26', n: '#e0a35e', N: '#b07434', t: '#f3d0a4', d: '#c27d45', D: '#8a5428',
+        o: '#f39237', O: '#c4621f', y: '#ffd447', Y: '#e3a227', p: '#ff9cbc', P: '#e2507f', r: '#ef5466',
+        v: '#c9b6ff', V: '#9479dc', e: '#5bbf5f', E: '#2f7d4a', f: '#a4e07a', u: '#7cc9ff', U: '#3f7fd9',
+        i: '#e3f7ff', m: '#3d3150', h: '#ef5466',
+      };
+
+      const sealBody = [
+        '...............kkk..',
+        '..............kgggk.',
+        '.............kgkgggk',
+        '.............kggggsk',
+        '.......kkkkkkgggglk.',
+        '....kkkgggggggggggk.',
+        '..kkggggllllllgggk..',
+        '.kgkggllllllllkgk...',
+        'kgkkkkkkkkkkkkkkk...',
+      ];
+      const ball = ['...............rr...', '..............ryyu..', '..............uyyr..', '...............uu...'];
+      const blank = '....................';
+
+      const catOpen = [
+        '.k....k.....',
+        'kmk..kmk....',
+        'kmmkkmmk....',
+        'kmmmmmmk....',
+        'kmymmymk....',
+        'kmmmpmmk....',
+        '.kmmmmk.....',
+        '.kmmmmmk....',
+        'kmmmmmmmk...',
+        'kmmmmmmmk.k.',
+        'kmmmmmmmkkmk',
+        'kmmkmkmmkmk.',
+        '.kkkkkkkkk..',
+      ];
+      const catBlink = catOpen.map((r, i) => (i === 4 ? 'kmkmmkmk....' : r));
+
+      const S = {
+        star: [['..w..', '..w..', 'wwyww', '..w..', '..w..']],
+        moon: [[
+          '....yyyyyy....', '..yyyyyyyyyy..', '.yyyyyyyyYyyy.', '.yyYYyyyyyyyy.', 'yyyYYyyyyyyyyy',
+          'yyyyyyyyyYYyyy', 'yyyyyyyyyYYyyy', 'yyyyyyyyyyyyyy', 'yyyYyyyyyyyyyy', 'yyyyyyyyyyyYyy',
+          '.yyyyyYYyyyyy.', '.yyyyyYYyyyyy.', '..yyyyyyyyyy..', '....yyyyyy....',
+        ]],
+        cloud: [[
+          '......pppp........', '...ppvvvvvpp.pp...', '..pvvvvvvvvvpvvp..', '.vvvvvvvvvvvvvvvv.',
+          'vvvvvvvvvvvvvvvvvv', 'VvvvvvvvvvvvvvvvvV', '.VVVVVVVVVVVVVVVV.',
+        ]],
+        sleepyCat: [[
+          '..k...k..........', '.kwk.kwk.........', '.kwwkwwk.........', 'kwwwwwwwk........',
+          'kwkkwkkwk..kkk...', 'kwwwpwwwwkkwwwk..', '.kwwwwwwwwwwwwwkk', '.kwwwwwwwwwwwwwwk', '..kkkkkkkkkkkkkk.',
+        ]],
+        icicles: [[
+          'iiiiiiiiiii', 'uiiiuiiiiui', 'uiu.uiiu.ui', '.iu.ui.u.u.', '.iu.ui.u.u.',
+          '.u..ui.u.u.', '.u..u..u...', '....u..u...', '....u......', '....u......',
+        ]],
+        balloons: [[
+          '..ppp.......', '.ppwpp..uuu.', 'pppwppp.uwuu', 'ppppppp.uwuu', 'ppppppp.uuuu', '.ppppp..uuuu',
+          '..PpP....uuu', '...P.....UU.', '...l......l.', '....l....l..', '.....l..l...', '......ll....',
+          '......l.....', '......l.....', '.....l......', '......l.....',
+        ]],
+        sword: [[
+          '............lw', '...........lwl', '..........lwl.', '.........lwl..', '........lwl...',
+          '.......lwl....', '......lwl.....', '..Y..lwl......', '..YYlwl.......', '...YYl........',
+          '...bYY........', '..bbB.Y.......', '.bbB..........', 'bB............',
+        ]],
+        heart: [['.hh.hh.', 'hwhhhhh', 'hhhhhhh', '.hhhhh.', '..hhh..', '...h...']],
+        cakeIcon: [
+          ['..o...o...o...', '.oyo.oyo.oyo..', '..w...w...w...', '..p...u...y...', '..p...u...y...', 'PPPPPPPPPPPPPP',
+           'PppPPppPPppPPp', 'cPccPcccPcccPc', 'cccccccccccccc', 'cccccccccccccc', 'PPPPPPPPPPPPPP', 'cccccccccccccc', 'cccccccccccccc', '.llllllllllll.'],
+          ['...o...o...o..', '..oyo.oyo.oyo.', '..w...w...w...', '..p...u...y...', '..p...u...y...', 'PPPPPPPPPPPPPP',
+           'PppPPppPPppPPp', 'cPccPcccPcccPc', 'cccccccccccccc', 'cccccccccccccc', 'PPPPPPPPPPPPPP', 'cccccccccccccc', 'cccccccccccccc', '.llllllllllll.'],
+        ],
+        sunflower: [[
+          '..yyy..', '.yyYyy.', 'yyBBByy', 'yYBBBYy', 'yyBBByy', '.yyYyy.', '..yyy..',
+          '...e...', '.eee...', '..ee...', '...e.ee', '...eee.', '...e...', '...e...',
+        ]],
+        bush: [['....eeee......', '..eeffeeee....', '.eefeeeeeeee..', 'eeeeeeeEeeeee.', 'eEeeeEeeeeEeee', 'EEEEEEEEEEEEEE']],
+        chest: [[
+          '..BBBBBBBBBB..', '.BbbbbbbbbbbB.', 'BbbnbbbbbbnbbB', 'BYYYYYYYYYYYYB', 'BbbbbbYYbbbbbB', 'BbbbbbYkbbbbbB',
+          'BbnbbbbbbbbnbB', 'BbbbbbbbbbbbbB', 'BYYYYYYYYYYYYB', 'BbbbbbbbbbbbbB', 'BBBBBBBBBBBBBB',
+        ]],
+        dog: [
+          [
+            '............kkkk....', '...........knnnnk...', '..........knnnnnnk..', '..........knnkwnnnkk',
+            '..........kNnnnnnnnk', '.kk.......kNNnnpkkk.', 'knnk.....knnnnnnk...', '.knnkkkkknnnnnnnnk..',
+            '..knnnnnnnnnnnnnnk..', '..knnnnnnnnnnnnnk...', '...knk.knk..knk.knk.', '...knk.knk..knk.knk.', '...kk..kk...kk..kk..',
+          ],
+          [
+            '............kkkk....', '...........knnnnk...', '..........knnnnnnk..', '..........knnkwnnnkk',
+            '..........kNnnnnnnnk', '..........kNNnnpkkk.', '.........knnnnnnk...', '..kkkkkkknnnnnnnnk..',
+            '.knnnnnnnnnnnnnnnk..', 'knknnnnnnnnnnnnk....', '...knk.knk..knk.knk.', '...knk.knk..knk.knk.', '...kk..kk...kk..kk..',
+          ],
+        ],
+        seal: [[...ball, blank, ...sealBody], [blank, ...ball, ...sealBody]],
+        otter: [[
+          '...kkkkk....', '..kbbbbbk...', '.kbkbbbkbk..', '.kbtttttbk..', 'lkbttkttbkl.', '..kbtttbk...',
+          '..kbtttbk...', '.kbbtttbbk..', '.kbBpppBbk..', '.kbBpPpBbk..', '.kbtttttbk..', '.kbtttttbk..',
+          '.kbbtttbbk..', '..kbbbbbkkk.', '..kbk.kbkbbk', '..kBk.kBk.kk', '..kk..kk....',
+        ]],
+        deer: [[
+          '..B..B............', '..BB.B.B..........', '...BBBB...........', '....BB............', '...kddkkk.........',
+          '..kdddkdk.........', '.kdkdddk..........', 'kdddddk...........', 'kkdddtk...........', '...kddk...........',
+          '...kdddkkkkkkkk...', '...kdddddddddddkk.', '...kdwdddwdddwddkw', '...kddddddddddddk.', '....kdddddddddDk..',
+          '....kDkdk...kDkdk.', '....kDkdk...kDkdk.', '....kDkdk...kDkdk.', '....kk.kk...kk.kk.',
+        ]],
+        blackCat: [catOpen, catOpen, catOpen, catOpen, catOpen, catOpen, catOpen, catBlink],
+        walkCat: [
+          [
+            '...........k....k.', '..........kok..kok', '..........kooooook', '.k........kokookok', 'kok.......kooppook',
+            '.kok.kkkkkkooooook', '..kooOooOooOoooook', '..kooooooooooooook', '..koooooooooooook.', '..kok.kok..kok.kok', '..kk..kk...kk..kk.',
+          ],
+          [
+            '...........k....k.', '..........kok..kok', '..........kooooook', '..........kokookok', 'k.........kooppook',
+            'kok.kkkkkkkooooook', '.kkooOooOooOoooook', '..kooooooooooooook', '..koooooooooooook.', '...kok.kok.kok.ko.', '...kk..kk..kk..kk.',
+          ],
+        ],
+      };
+
+      // procedural sprites
+      S.tower = (() => {
+        const W = 18, flames = [
+          ['........o.........', '.......oyo........', '.......oyo........', '......oyyyo.......', '......oywyo.......', '.......ooo........'],
+          ['.........o........', '........oyo.......', '.......oyyo.......', '......oyyyo.......', '......oywyo.......', '.......ooo........'],
+        ];
+        const body = ['.....GGGGGGGG.....', '......GGGGGG......'];
+        for (let y = 0; y < 40; y++) {
+          let row = '';
+          for (let x = 0; x < W; x++) {
+            let ch = '.';
+            const inBody = x >= 1 && x <= 16;
+            if (y < 3) ch = inBody && (x - 1) % 5 < 3 ? (x === 1 ? 'l' : 'g') : '.';
+            else if (y === 3) ch = 'G';
+            else if (inBody) {
+              const yy = y - 4, off = Math.floor(yy / 3) % 2 ? 2 : 0;
+              ch = yy % 3 === 2 ? 'G' : (x + off) % 5 === 0 ? 'G' : 'g';
+              if (yy % 3 === 0 && (x + off) % 5 === 1) ch = 'l';
+              if (x === 1) ch = 'l';
+              if (x === 16) ch = 'G';
+              if (y >= 10 && y <= 15 && x >= 7 && x <= 10) ch = y === 10 && (x === 7 || x === 10) ? 'g' : (x === 8 || x === 9) && y > 11 ? 'Y' : 'y';
+              if (y >= 32 && x >= 6 && x <= 11) ch = y === 32 && (x === 6 || x === 11) ? 'g' : x === 6 ? 'B' : 'b';
+            }
+            row += ch;
+          }
+          body.push(row);
+        }
+        return flames.map((f) => [...f, ...body]);
+      })();
+
+      S.tree = (() => {
+        const W = 28, H = 32, rows = [];
+        const blobs = [[14, 8, 7.5], [8, 12, 6], [20, 12, 6.5], [14, 14, 7], [4, 15, 3.5], [24, 16, 3.5]];
+        const hash = (x, y) => { const s = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; return s - Math.floor(s); };
+        for (let y = 0; y < H; y++) {
+          let row = '';
+          for (let x = 0; x < W; x++) {
+            let ch = '.';
+            const inside = blobs.some(([cx, cy, r]) => (x - cx) ** 2 + (y - cy) ** 2 <= r * r);
+            if (inside && y < 21) {
+              const shade = (x - 6) * .35 + (y - 4) * .7 + hash(x, y) * 3;
+              ch = shade < 4 ? 'f' : shade < 11 ? 'e' : 'E';
+              if (hash(x + 3, y + 7) > .965) ch = 'p';
+            } else if (y >= 18 && x >= 12 && x <= 15) ch = x === 12 ? 'B' : 'b';
+            else if (y >= 29 && (x === 10 || x === 11 || x === 16 || x === 17)) ch = 'B';
+            row += ch;
+          }
+          rows.push(row);
+        }
+        return [rows];
+      })();
+
+      const grassTile = ['....e.......f...', '...efe.e...eee..', 'e.eeeeeee.eeeeee', 'eeeeefeeeeeeeefe',
+        'EeeeeeeEeeeeEeee', 'EEeEEEEEEEeEEEEE', 'EEEEEEEEEEEEEEEE', 'EEEEEEEEEEEEEEEE'];
+
+      const cache = new Map();
+      function render(rows, swap) {
+        const w = Math.max(...rows.map((r) => r.length)), h = rows.length;
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const g = c.getContext('2d');
+        rows.forEach((row, y) => {
+          for (let x = 0; x < row.length; x++) {
+            const ch = row[x];
+            if (ch === '.' || ch === ' ') continue;
+            g.fillStyle = (swap && swap[ch]) || PAL[ch] || '#ff00ff';
+            g.fillRect(x, y, 1, 1);
+          }
+        });
+        return c;
+      }
+      function framesFor(name, swapStr) {
+        const key = name + '|' + (swapStr || '');
+        if (!cache.has(key)) {
+          const swap = swapStr ? Object.fromEntries(swapStr.split(',').map((p) => p.split(':'))) : null;
+          cache.set(key, S[name].map((f) => render(f, swap)));
+        }
+        return cache.get(key);
+      }
+
+      const stars = document.getElementById('pxStars');
+      [[6, 22], [14, 4], [22, 18], [35, 9], [40, 26], [57, 14], [63, 5], [71, 22], [83, 8], [90, 18], [96, 30], [3, 40]].forEach(([x, y], i) => {
+        const s = document.createElement('span');
+        s.className = 'spr px-star';
+        s.dataset.sprite = 'star';
+        s.dataset.k = i % 3 === 0 ? '1' : '.6';
+        s.style.cssText = `left:${x}%;top:${y}%;animation-delay:${(i * .37).toFixed(2)}s`;
+        stars.appendChild(s);
+      });
+
+      const animated = [];
+      for (const el of intro.querySelectorAll('[data-sprite]')) {
+        const frames = framesFor(el.dataset.sprite, el.dataset.swap);
+        const cv = document.createElement('canvas');
+        cv.width = frames[0].width; cv.height = frames[0].height;
+        const g = cv.getContext('2d');
+        g.drawImage(frames[0], 0, 0);
+        el.style.setProperty('--w', cv.width);
+        el.style.setProperty('--h', cv.height);
+        if (el.dataset.k) el.style.setProperty('--k', el.dataset.k);
+        el.appendChild(cv);
+        if (frames.length > 1) animated.push({ g, frames, i: 0, rate: +(el.dataset.rate || 300), last: 0 });
+      }
+      document.getElementById('pxGrass').style.backgroundImage = `url(${render(grassTile).toDataURL()})`;
+
+      const setPx = () => {
+        const w = innerWidth, h = innerHeight;
+        intro.style.setProperty('--px', w < 640 || h < 640 ? 3 : w < 1700 ? 4 : 5);
+      };
+      setPx();
+      addEventListener('resize', setPx);
+
+      if (!REDUCED) {
+        const timer = setInterval(() => {
+          if (!intro.isConnected) { clearInterval(timer); return; }
+          const now = performance.now();
+          for (const a of animated) {
+            if (now - a.last < a.rate) continue;
+            a.last = now;
+            a.i = (a.i + 1) % a.frames.length;
+            a.g.clearRect(0, 0, a.g.canvas.width, a.g.canvas.height);
+            a.g.drawImage(a.frames[a.i], 0, 0);
+          }
+        }, 40);
+      }
+
+      const main = document.getElementById('pxMain'), how = document.getElementById('pxHow');
+      document.getElementById('howBtn').addEventListener('click', () => { main.hidden = true; how.hidden = false; document.getElementById('howBack').focus(); });
+      document.getElementById('howBack').addEventListener('click', () => { how.hidden = true; main.hidden = false; document.getElementById('howBtn').focus(); });
+    })();
+  </script>
 
   <div class="flash" id="flash" aria-hidden="true"></div>
 
